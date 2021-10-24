@@ -1,0 +1,29 @@
+meta
+{
+  title: "Colombian-specific rules";
+  version: "2021-10-23";
+  description: "Community rules for the most common errors and problems found in Colombia. Messages are in English and Spanish.";
+  author: "OpenStreetMap Colombia - Maptime Bogota";
+  link: "https://github.com/MaptimeBogota/ColombianJosmValidator";
+  baselanguage: "es_CO";
+  watch-modified: true;
+}
+
+/* Nombres de ríos y quebradas. Deben comenzar con la palabra Río, Quebrada u otra de la expresión regular. */
+way
+  ["waterway"="river"]
+  ["name"]
+  ["name"!~"^(Río|Quebrada|Caño|Chorro|Cañada|Canal|Arroyo|Nacimiento|Zanjón) "] {
+	throwWarning: tr(En los cuerpos de agua de tipo River, el nombre debe comenzar con: Río, Quebrada, Caño, Chorro, Cañada, Canal, Arroyo, Nacimiento, Zanjón);
+}
+
+/* Tipos de vías. En la guía de mapeo se indican las válidas para Colombia. */
+
+/* Nombres de vías. El nombre de las vías se explica en la guía de mapeo. */
+
+/* Nombre de vía en dirección. Las direcciones deben indicar el nombre de la calle más cercana, pero no su distancia desde la esquina. */
+
+/* Complemento de la dirección. Debe contener el número de la calle del cruce y su "distancia" desde la esquina. */
+
+/* Los teléfonos en Colombia tienen unos prefijos nuevos para fijos y los de celulares. */
+/
