@@ -1,21 +1,39 @@
 meta
 {
   title: "Colombian-specific rules";
+  icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACrklEQVR42u3ZMUoDQRiG4T9mIOtKSq29gUUu4E20srS2FTyI3sMiV/AGaQTRIgF14+KusRVZHOvZ5ymHVB/My5CNAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAQkx+H3QPR2cRcWwaKM4qnTzf/TxIAz86j4hTW0FxlhGRDQAwEgIAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgACAAJgABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEAAQAEABAAQACAUQagaVPUs84yUJimTfkAbLZV1LM3a0FhNtsqH4DFzUW8vB5YCwpzOH+PiKvMC6CpLAUlvgCaf7wAPvuppaBAQ3fbVwAYMQEAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEAPg7AGnXRzeZWgZKu+y7PrpcAOZ9G+tUWwsKM+/bWOcCcP10H9VXZy0ozMdeistcABbNY+zvBABKs52k/H8ALj+Uaehu+woAIyYAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgACMDA2W1ELE0DxVmZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAYn0D8fk8qwS1ctwAAAAASUVORK5CYII=";
   version: "2021-10-23";
   description: "Community rules for the most common errors and problems found in Colombia. Messages are in English and Spanish.";
   author: "OpenStreetMap Colombia - Maptime Bogota";
-  icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACrklEQVR42u3ZMUoDQRiG4T9mIOtKSq29gUUu4E20srS2FTyI3sMiV/AGaQTRIgF14+KusRVZHOvZ5ymHVB/My5CNAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAQkx+H3QPR2cRcWwaKM4qnTzf/TxIAz86j4hTW0FxlhGRDQAwEgIAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgACAAJgABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEAAQAEABAAQACAUQagaVPUs84yUJimTfkAbLZV1LM3a0FhNtsqH4DFzUW8vB5YCwpzOH+PiKvMC6CpLAUlvgCaf7wAPvuppaBAQ3fbVwAYMQEAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEAPg7AGnXRzeZWgZKu+y7PrpcAOZ9G+tUWwsKM+/bWOcCcP10H9VXZy0ozMdeistcABbNY+zvBABKs52k/H8ALj+Uaehu+woAIyYAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgACMDA2W1ELE0DxVmZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAYn0D8fk8qwS1ctwAAAAASUVORK5CYII=";
   link: "https://github.com/MaptimeBogota/ColombianJosmValidator";
-  baselanguage: "es_CO";
-  watch-modified: true;
 }
 
-/* Nombres de ríos y quebradas. Deben comenzar con la palabra Río, Quebrada u otra de la expresión regular. */
+/* Nombres de ríos y quebradas. Deben comenzar con la palabra Río, Quebrada u otro de la expresión regular. */
 way
+  [inside("CO")]
   ["waterway"="river"]
   ["name"]
   ["name"!~"^(Río|Quebrada|Caño|Chorro|Cañada|Canal|Arroyo|Nacimiento|Zanjón) "] {
-	throwWarning: tr(En los cuerpos de agua de tipo River, el nombre debe comenzar con: Río, Quebrada, Caño, Chorro, Cañada, Canal, Arroyo, Nacimiento, Zanjón);
+    throwWarning: tr(En los cuerpos de agua de tipo River, el nombre debe comenzar con: Río, Quebrada, Caño, Chorro, Cañada, Canal, Arroyo, Nacimiento, Zanjón);
+
+   /* Assertions for unit tests */
+   assertMatch: "way waterway=river name=\"Río Magdalena\"";
+   assertNoMatch: "way waterway=river name=Magdalena";
+   assertNoMatch: "way waterway=river name=\"Rio Magdalena\"";
+}
+
+/* Nombres de ríos y quebradas. Deben comenzar con la palabra Río, Quebrada u otro de la expresión regular. */
+relation
+  [inside("CO")]
+  ["waterway"="river"]
+  ["name"]
+  ["name"!~"^(Río|Quebrada|Caño|Chorro|Cañada|Canal|Arroyo|Nacimiento|Zanjón) "] {
+    throwWarning: tr(En los cuerpos de agua de tipo River, el nombre debe comenzar con: Río, Quebrada, Caño, Chorro, Cañada, Canal, Arroyo, Nacimiento, Zanjón);
+ 
+   /* Assertions for unit tests */
+   assertMatch: "relation waterway=river name=\"Río Magdalena\"";
+   assertNoMatch: "relation waterway=river name=Magdalena";
+   assertNoMatch: "relation waterway=river name=\"Rio Magdalena\"";
 }
 
 /* Tipos de vías. En la guía de mapeo se indican las válidas para Colombia. */
