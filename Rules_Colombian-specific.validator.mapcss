@@ -9,31 +9,31 @@ meta
 }
 
 /* Nombres de ríos y quebradas. Deben comenzar con la palabra Río, Quebrada u otro de la expresión regular. */
-way
-  [inside("CO")]
-  ["waterway"="river"]
-  ["name"]
-  ["name"!~"^(Río|Quebrada|Caño|Chorro|Cañada|Canal|Arroyo|Nacimiento|Zanjón) "] {
-    throwWarning: tr(En los cuerpos de agua de tipo River, el nombre debe comenzar con: Río, Quebrada, Caño, Chorro, Cañada, Canal, Arroyo, Nacimiento, Zanjón);
+way["waterway" =~ /river|stream/]["name"]["name" !~ /^(Río|Quebrada|Caño|Chorro|Cañada|Canal|Arroyo|Nacimiento|Zanjón) /][inside("CO")] {
+    throwWarning: "En los cuerpos de agua de tipo \"river\" o \"stream\", el nombre debe comenzar con: Río, Quebrada, Caño, Chorro, Cañada, Canal, Arroyo, Nacimiento, Zanjón";
+
+   group: "Colombia - Cuerpos de agua";
 
    /* Assertions for unit tests */
-   assertMatch: "way waterway=river name=\"Río Magdalena\"";
-   assertNoMatch: "way waterway=river name=Magdalena";
-   assertNoMatch: "way waterway=river name=\"Rio Magdalena\"";
+   assertMatch: "way waterway=river name=Magdalena";
+   assertMatch: "way waterway=river name=\"Rio Magdalena\"";
+   assertMatch: "way waterway=stream name=\"La Vieja\"";
+   assertNoMatch: "way waterway=river name=\"Río Magdalena\"";
+   assertNoMatch: "way waterway=stream name=\"Quebrada La Vieja\"";
 }
 
 /* Nombres de ríos y quebradas. Deben comenzar con la palabra Río, Quebrada u otro de la expresión regular. */
-relation
-  [inside("CO")]
-  ["waterway"="river"]
-  ["name"]
-  ["name"!~"^(Río|Quebrada|Caño|Chorro|Cañada|Canal|Arroyo|Nacimiento|Zanjón) "] {
-    throwWarning: tr(En los cuerpos de agua de tipo River, el nombre debe comenzar con: Río, Quebrada, Caño, Chorro, Cañada, Canal, Arroyo, Nacimiento, Zanjón);
+relation["waterway" =~ /river|stream/]["name"]["name" !~ /^(Río|Quebrada|Caño|Chorro|Cañada|Canal|Arroyo|Nacimiento|Zanjón) /][inside("CO")] {
+    throwWarning: "En los cuerpos de agua de tipo River, el nombre debe comenzar con: Río, Quebrada, Caño, Chorro, Cañada, Canal, Arroyo, Nacimiento, Zanjón";
  
+   group: "Colombia - Cuerpos de agua";
+
    /* Assertions for unit tests */
-   assertMatch: "relation waterway=river name=\"Río Magdalena\"";
-   assertNoMatch: "relation waterway=river name=Magdalena";
-   assertNoMatch: "relation waterway=river name=\"Rio Magdalena\"";
+   assertMatch: "relation waterway=river name=Magdalena";
+   assertMatch: "relation waterway=river name=\"Rio Magdalena\"";
+   assertMatch: "relation waterway=stream name=\"La Vieja\"";
+   assertNoMatch: "relation waterway=river name=\"Río Magdalena\"";
+   assertNoMatch: "relation waterway=stream name=\"Quebrada La Vieja\"";
 }
 
 /* Tipos de vías. En la guía de mapeo se indican las válidas para Colombia. */
@@ -45,4 +45,4 @@ relation
 /* Complemento de la dirección. Debe contener el número de la calle del cruce y su "distancia" desde la esquina. */
 
 /* Los teléfonos en Colombia tienen unos prefijos nuevos para fijos y los de celulares. */
-/
+
