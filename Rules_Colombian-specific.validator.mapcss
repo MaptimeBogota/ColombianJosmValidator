@@ -1,48 +1,161 @@
 meta
 {
-  title: "Colombian-specific rules";
+  title: "Colombia specific rules";
   icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACrklEQVR42u3ZMUoDQRiG4T9mIOtKSq29gUUu4E20srS2FTyI3sMiV/AGaQTRIgF14+KusRVZHOvZ5ymHVB/My5CNAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAQkx+H3QPR2cRcWwaKM4qnTzf/TxIAz86j4hTW0FxlhGRDQAwEgIAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgACAAJgABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEAAQAEABAAQACAUQagaVPUs84yUJimTfkAbLZV1LM3a0FhNtsqH4DFzUW8vB5YCwpzOH+PiKvMC6CpLAUlvgCaf7wAPvuppaBAQ3fbVwAYMQEAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEAPg7AGnXRzeZWgZKu+y7PrpcAOZ9G+tUWwsKM+/bWOcCcP10H9VXZy0ozMdeistcABbNY+zvBABKs52k/H8ALj+Uaehu+woAIyYAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgACMDA2W1ELE0DxVmZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAYn0D8fk8qwS1ctwAAAAASUVORK5CYII=";
-  version: "2021-10-23";
-  description: "Community rules for the most common errors and problems found in Colombia. Messages are in English and Spanish.";
-  author: "OpenStreetMap Colombia - Maptime Bogota";
+  version: "2021-10-27";
+  description: "Validation rules for the most common issues found in Colombia. Messages are in Spanish, with suggestion and fixes. This is based on the Colombian Guide for Mapping which can be found in the OSM Wiki.";
+  author: "Andres Gomez (AngocA) - Maptime Bogota";
   link: "https://github.com/MaptimeBogota/ColombianJosmValidator";
 }
 
-/* Nombres de ríos y quebradas. Deben comenzar con la palabra Río, Quebrada u otro de la expresión regular. */
-way["waterway" =~ /river|stream/]["name"]["name" !~ /^(Río|Quebrada|Caño|Chorro|Cañada|Canal|Arroyo|Nacimiento|Zanjón) /][inside("CO")] {
-    throwWarning: "En los cuerpos de agua de tipo \"river\" o \"stream\", el nombre debe comenzar con: Río, Quebrada, Caño, Chorro, Cañada, Canal, Arroyo, Nacimiento, Zanjón";
+
+/***** RIOS Y QUEBRADAS *****/
+
+/* Nombres de ríos. Deben comenzar con la palabra Río, Quebrada u otro nombre de la expresión regular. */
+*["waterway"="river"]["name"]["name" !~ /^(Río|Quebrada|Arroyo|Caño|Chorro|Cañada|Canal|Estero|Nacimiento|Zanjón) /][inside("CO")] {
+    throwWarning: "En los cuerpos de agua de tipo \"river\" o \"stream\", la etiqueta name debe comenzar con: Río, Quebrada, Arroyo, Caño, Chorro, Cañada, Canal, Estero, Nacimiento, Zanjón seguido del nombre como tal";
+
+   fixAdd: "name=Río {1.value}";
+
+   suggestAlternative: "name=\"Río {1.value}\"";
 
    group: "Colombia - Cuerpos de agua";
 
    /* Assertions for unit tests */
    assertMatch: "way waterway=river name=Magdalena";
    assertMatch: "way waterway=river name=\"Rio Magdalena\"";
-   assertMatch: "way waterway=stream name=\"La Vieja\"";
+   assertMatch: "way waterway=river name=\"La Vieja\"";
    assertNoMatch: "way waterway=river name=\"Río Magdalena\"";
-   assertNoMatch: "way waterway=stream name=\"Quebrada La Vieja\"";
+   assertNoMatch: "way waterway=river name=\"Quebrada La Vieja\"";
 }
 
-/* Nombres de ríos y quebradas. Deben comenzar con la palabra Río, Quebrada u otro de la expresión regular. */
-relation["waterway" =~ /river|stream/]["name"]["name" !~ /^(Río|Quebrada|Caño|Chorro|Cañada|Canal|Arroyo|Nacimiento|Zanjón) /][inside("CO")] {
-    throwWarning: "En los cuerpos de agua de tipo River, el nombre debe comenzar con: Río, Quebrada, Caño, Chorro, Cañada, Canal, Arroyo, Nacimiento, Zanjón";
- 
+/* Nombres de quebradas. Deben comenzar con la palabra Quebrada, Río u otro nombre de la expresión regular. */
+*["waterway"="stream"]["name"]["name" !~ /^(Río|Quebrada|Arroyo|Caño|Chorro|Cañada|Canal|Estero|Nacimiento|Zanjón) /][inside("CO")] {
+    throwWarning: "En los cuerpos de agua de tipo \"stream\" o \"river\", la etiqueta name debe comenzar con: Río, Quebrada, Arroyo, Caño, Chorro, Cañada, Canal, Estero, Nacimiento, Zanjón seguido del nombre como tal";
+
+   fixAdd: "name=Quebrada {1.value}";
+
+   suggestAlternative: "name=\"Quebrada {1.value}\"";
+
    group: "Colombia - Cuerpos de agua";
 
    /* Assertions for unit tests */
-   assertMatch: "relation waterway=river name=Magdalena";
-   assertMatch: "relation waterway=river name=\"Rio Magdalena\"";
-   assertMatch: "relation waterway=stream name=\"La Vieja\"";
-   assertNoMatch: "relation waterway=river name=\"Río Magdalena\"";
-   assertNoMatch: "relation waterway=stream name=\"Quebrada La Vieja\"";
+   assertMatch: "way waterway=stream name=Magdalena";
+   assertMatch: "way waterway=stream name=\"Rio Magdalena\"";
+   assertMatch: "way waterway=stream name=\"La Vieja\"";
+   assertNoMatch: "way waterway=stream name=\"Río Magdalena\"";
+   assertNoMatch: "way waterway=stream name=\"Quebrada La Vieja\"";
 }
 
-/* Tipos de vías. En la guía de mapeo se indican las válidas para Colombia. */
 
-/* Nombres de vías. El nombre de las vías se explica en la guía de mapeo. */
+/***** VIAS *****/
+
+*["highway"="motorway"][inside("CO")] {
+    throwWarning: "En Colombia no hay autopistas como tal, inclusive si se llaman así";
+
+   fixAdd: "highway=trunk";
+
+   suggestAlternative: "highway=trunk";
+
+   group: "Colombia - Vías";
+
+   /* Assertions for unit tests */
+   assertMatch: "way highway=motorway";
+   assertNoMatch: "way highway=trunk";
+   assertNoMatch: "way highway=primary";
+}
+
+*["highway"="living_street"]["name"][inside("CO")] {
+    throwWarning: "En Colombia no hay como tal living streets, en cambio hay residential o pedestrian";
+
+   fixAdd: "highway=residential";
+
+   suggestAlternative: "highway=residential o highway=pedestrian";
+
+   group: "Colombia - Vías";
+
+   /* Assertions for unit tests */
+   assertMatch: "way highway=living_street name=\"Calle 1\"";
+   assertNoMatch: "way highway=residential";
+   assertNoMatch: "way highway=pedestrian";
+}
+
+*["highway"="living_street"][!"name"][inside("CO")] {
+    throwWarning: "En Colombia no hay como tal living streets, en cambio hay service o pedestrian";
+
+   fixAdd: "highway=service";
+
+   suggestAlternative: "highway=service o highway=pedestrian";
+
+   group: "Colombia - Vías";
+
+   /* Assertions for unit tests */
+   assertMatch: "way highway=living_street";
+   assertNoMatch: "way highway=service";
+   assertNoMatch: "way highway=pedestrian";
+}
+
+*["highway"="unclassified"][inside("CO")] {
+    throwWarning: "Unclassified es la más baja categoría de vías para automóviles en Reino Unido. Esta categorización es diferente en Colombia";
+
+   fixAdd: "highway=road";
+
+   suggestAlternative: "highway=road, highway=service, highway=track o highway=path";
+
+   group: "Colombia - Vías";
+
+   /* Assertions for unit tests */
+   assertMatch: "way highway=unclassified";
+   assertNoMatch: "way highway=road";
+   assertNoMatch: "way highway=track";
+   assertNoMatch: "way highway=path";
+}
+
+*["highway" =~ /trunk|primary|secondary|tertiary|residential|link/]["name"]["name" !~ /^((Calle|Avenida Calle|Carrera|Avenida Carrera|Transversal|Avenida Transversal|Diagonal|Avenida Diagonal) [1-9][0-9]{0,2}[A-Z]{0,1}( Bis( [A-Z]){0,1}){0,1}( Este| Sur| Oeste| Norte){0,1}|Vía .*)$/][inside("CO")] {
+    throwWarning: "Los nombres de vías no deben contener abreviaturas, y deben seguir la estructura de nombre";
+
+   group: "Colombia - Vías";
+
+   /* Assertions for unit tests */
+   assertMatch: "way highway=primary name=Rotonda";
+   assertNoMatch: "way highway=secondary";
+   assertNoMatch: "way highway=tertiary name=\"Calle 1\"";
+   assertNoMatch: "way highway=service";
+}
+
+*["highway" =~ /trunk|primary|secondary|tertiary|residential|link/]["alt_name"]["alt_name" =~ /^(Calle|Avenida Calle|Carrera|Avenida Carrera|Transversal|Avenida Transversal|Diagonal|Avenida Diagonal) [1-9][0-9]{0,2}[A-Z]{0,1}( Bis( [A-Z]){0,1}){0,1}( Este| Sur| Oeste| Norte){0,1}$/][inside("CO")] {
+    throwWarning: "El nombre alterno no puede ser el nombre numérico. Puede que lo tengas que invertir con name";
+
+   group: "Colombia - Vías";
+
+   /* Assertions for unit tests */
+   assertMatch: "way highway=tertiary alt_name=\"Calle 1\"";
+   assertNoMatch: "way highway=primary name=Rotonda";
+   assertNoMatch: "way highway=secondary";
+   assertNoMatch: "way highway=service";
+}
+
+
+/***** DIRECCIONES *****/
+
+*["addr:street"]["addr:street" !~ /^(Calle|Avenida Calle|Carrera|Avenida Carrera|Transversal|Avenida Transversal|Diagonal|Avenida Diagonal) [1-9][0-9]{0,2}[A-Z]{0,1}( Bis( [A-Z]){0,1}){0,1}( Este| Sur| Oeste| Norte){0,1}$/][inside("CO")] {
+    throwWarning: "En las direcciones, los nombres de vías no deben contener abreviaturas, y deben seguir la estructura de nombre";
+
+   group: "Colombia - Vías";
+
+   /* Assertions for unit tests */
+   assertMatch: "way addr:street=Rotonda";
+   assertNoMatch: "way addr:street=\"Calle 1\"";
+}
+
+
 
 /* Nombre de vía en dirección. Las direcciones deben indicar el nombre de la calle más cercana, pero no su distancia desde la esquina. */
 
 /* Complemento de la dirección. Debe contener el número de la calle del cruce y su "distancia" desde la esquina. */
 
-/* Los teléfonos en Colombia tienen unos prefijos nuevos para fijos y los de celulares. */
+/* Los teléfonos en Colombia tienen unos prefijos nuevos para fijos y los de celulares. 
++57 601 xxx xxxx
++57 3xx xxx xxxx
+ */
 
