@@ -2,7 +2,7 @@ meta
 {
   title: "Colombia specific rules";
   icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACrklEQVR42u3ZMUoDQRiG4T9mIOtKSq29gUUu4E20srS2FTyI3sMiV/AGaQTRIgF14+KusRVZHOvZ5ymHVB/My5CNAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAQkx+H3QPR2cRcWwaKM4qnTzf/TxIAz86j4hTW0FxlhGRDQAwEgIAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgACAAJgABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEAAQAEABAAQACAUQagaVPUs84yUJimTfkAbLZV1LM3a0FhNtsqH4DFzUW8vB5YCwpzOH+PiKvMC6CpLAUlvgCaf7wAPvuppaBAQ3fbVwAYMQEAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEAPg7AGnXRzeZWgZKu+y7PrpcAOZ9G+tUWwsKM+/bWOcCcP10H9VXZy0ozMdeistcABbNY+zvBABKs52k/H8ALj+Uaehu+woAIyYAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgACMDA2W1ELE0DxVmZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAYn0D8fk8qwS1ctwAAAAASUVORK5CYII=";
-  version: "2021-10-27";
+  version: "2021-10-28";
   description: "Validation rules for the most common issues found in Colombia. Messages are in Spanish, with suggestion and fixes. This is based on the Colombian Guide for Mapping which can be found in the OSM Wiki.";
   author: "Andres Gomez (AngocA) - Maptime Bogota";
   link: "https://github.com/MaptimeBogota/ColombianJosmValidator";
@@ -50,6 +50,7 @@ meta
 
 /***** VIAS *****/
 
+/* No hay autopistas - motorway en Colombia. */
 *["highway"="motorway"][inside("CO")] {
     throwWarning: "En Colombia no hay autopistas como tal, inclusive si se llaman así";
 
@@ -65,6 +66,7 @@ meta
    assertNoMatch: "way highway=primary";
 }
 
+/* No hay living streets en Colombia. Hay vías residenciales (Cuando tienen nombre). */
 *["highway"="living_street"]["name"][inside("CO")] {
     throwWarning: "En Colombia no hay como tal living streets, en cambio hay residential o pedestrian";
 
@@ -80,6 +82,7 @@ meta
    assertNoMatch: "way highway=pedestrian";
 }
 
+/* No hay living streets en Colombia. Hay vías peatonales (Cuando no tienen nombre). */
 *["highway"="living_street"][!"name"][inside("CO")] {
     throwWarning: "En Colombia no hay como tal living streets, en cambio hay service o pedestrian";
 
@@ -95,6 +98,7 @@ meta
    assertNoMatch: "way highway=pedestrian";
 }
 
+/* Las vías desconocidas no se deben mapear como unclassified. */
 *["highway"="unclassified"][inside("CO")] {
     throwWarning: "Unclassified es la más baja categoría de vías para automóviles en Reino Unido. Esta categorización es diferente en Colombia";
 
@@ -111,6 +115,7 @@ meta
    assertNoMatch: "way highway=path";
 }
 
+/* Las vías en Colombia deben indicar el tipo de vía en su nombre seguido de su numeración. */
 *["highway" =~ /trunk|primary|secondary|tertiary|residential|link/]["name"]["name" !~ /^((Calle|Avenida Calle|Carrera|Avenida Carrera|Transversal|Avenida Transversal|Diagonal|Avenida Diagonal) [1-9][0-9]{0,2}[A-Z]{0,1}( Bis( [A-Z]){0,1}){0,1}( Este| Sur| Oeste| Norte){0,1}|Vía .*)$/][inside("CO")] {
     throwWarning: "Los nombres de vías no deben contener abreviaturas, y deben seguir la estructura de nombre";
 
@@ -123,6 +128,7 @@ meta
    assertNoMatch: "way highway=service";
 }
 
+/* Los nombres alternos de las vías no deben tener el nombre numérico. */
 *["highway" =~ /trunk|primary|secondary|tertiary|residential|link/]["alt_name"]["alt_name" =~ /^(Calle|Avenida Calle|Carrera|Avenida Carrera|Transversal|Avenida Transversal|Diagonal|Avenida Diagonal) [1-9][0-9]{0,2}[A-Z]{0,1}( Bis( [A-Z]){0,1}){0,1}( Este| Sur| Oeste| Norte){0,1}$/][inside("CO")] {
     throwWarning: "El nombre alterno no puede ser el nombre numérico. Puede que lo tengas que invertir con name";
 
@@ -138,24 +144,52 @@ meta
 
 /***** DIRECCIONES *****/
 
+/* Las direcciones en Colombia, en el nombre de vía solo deben indicar el tipo y número. */
 *["addr:street"]["addr:street" !~ /^(Calle|Avenida Calle|Carrera|Avenida Carrera|Transversal|Avenida Transversal|Diagonal|Avenida Diagonal) [1-9][0-9]{0,2}[A-Z]{0,1}( Bis( [A-Z]){0,1}){0,1}( Este| Sur| Oeste| Norte){0,1}$/][inside("CO")] {
     throwWarning: "En las direcciones, los nombres de vías no deben contener abreviaturas, y deben seguir la estructura de nombre";
 
-   group: "Colombia - Vías";
+   group: "Colombia - Direcciones";
 
    /* Assertions for unit tests */
    assertMatch: "way addr:street=Rotonda";
    assertNoMatch: "way addr:street=\"Calle 1\"";
 }
 
+/* El número de casa en la dirección tiene 2 componentes no más. */
+*["addr:housenumber"]["addr:housenumber" !~ /^[1-9][0-9]{0,2}[A-Z]{0,1}( Bis( [A-Z]){0,1}){0,1}( Este| Sur| Oeste| Norte){0,1}-[1-9][0-9]{0,2}$/][inside("CO")] {
+    throwWarning: "En las direcciones, los números de immueble tienen 2 números separados por guíon, donde el primer número hace referencia a la vía con que hace el cruce, y el segundo es la distancia desde la esquina";
+
+   group: "Colombia - Direcciones";
+
+   /* Assertions for unit tests */
+   assertMatch: "way addr:housenumber=56";
+   assertMatch: "way addr:housenumber=\"61 - 31\"";
+   assertNoMatch: "way addr:housenumber=61-31";
+}
 
 
-/* Nombre de vía en dirección. Las direcciones deben indicar el nombre de la calle más cercana, pero no su distancia desde la esquina. */
+/***** TELÉFONO *****/
 
-/* Complemento de la dirección. Debe contener el número de la calle del cruce y su "distancia" desde la esquina. */
+/* Los número de teléfono de Colombia deben seguir el estándar internacional, no considerarse como llamadas locales.
+Los números de los operadores son:
+Claro: 310, 311, 312, 313, 314, 320, 321, 322, 323
+Movistar: 315, 316, 317, 318
+ETB: 305
+VirginMobile: 319
+Avantel: 350, 351
+Tigo: 300, 301, 302
+Tomado de: https://ayuda.tigo.com.co/hc/es/articles/115012920068-Indicativos-telef%C3%B3nicos-Colombia-General
+*/
+*[/^(phone|phone:mobile|fax|contact:phone|contact:mobile|contact:fax|emergency:phone)$/][/^(phone|phone:mobile|fax|contact:phone|contact:mobile|contact:fax|emergency:phone)$/ !~ /^\+57 (601|602|604|605|606|607|608|300|301|302|305|310|311|312|313|314|315|316|317|318|319|320|321|322|323|350|351) [0-9]{7}$/][inside("CO")] {
+    throwWarning: "Los números de Colombia comienzan con +57, después 3 dígitos de código de área, y finalmente el número como tal";
 
-/* Los teléfonos en Colombia tienen unos prefijos nuevos para fijos y los de celulares. 
-+57 601 xxx xxxx
-+57 3xx xxx xxxx
- */
+   group: "Colombia - Teléfonos";
+
+   /* Assertions for unit tests */
+   assertNoMatch: "node phone:mobile=\"+57 316 6214030\"";
+   assertMatch: "node phone=\"+57 1 2219872\"";
+   assertMatch: "node emergency:phone=\"+57 1 2222252\"";
+   assertMatch: "node phone=\"316 6214032\"";
+   assertMatch: "node phone=00573166214032";
+}
 
