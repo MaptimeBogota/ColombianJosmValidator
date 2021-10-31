@@ -2,7 +2,7 @@ meta
 {
   title: "Colombia specific rules";
   icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACrklEQVR42u3ZMUoDQRiG4T9mIOtKSq29gUUu4E20srS2FTyI3sMiV/AGaQTRIgF14+KusRVZHOvZ5ymHVB/My5CNAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAQkx+H3QPR2cRcWwaKM4qnTzf/TxIAz86j4hTW0FxlhGRDQAwEgIAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgACAAJgABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEAAQAEABAAQACAUQagaVPUs84yUJimTfkAbLZV1LM3a0FhNtsqH4DFzUW8vB5YCwpzOH+PiKvMC6CpLAUlvgCaf7wAPvuppaBAQ3fbVwAYMQEAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEAPg7AGnXRzeZWgZKu+y7PrpcAOZ9G+tUWwsKM+/bWOcCcP10H9VXZy0ozMdeistcABbNY+zvBABKs52k/H8ALj+Uaehu+woAIyYAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgACMDA2W1ELE0DxVmZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAYn0D8fk8qwS1ctwAAAAASUVORK5CYII=";
-  version: "2021-10-28";
+  version: "2021-10-30";
   description: "Validation rules for the most common issues found in Colombia. Messages are in Spanish, with suggestion and fixes. This is based on the Colombian Guide for Mapping which can be found in the OSM Wiki.";
   author: "Andres Gomez (AngocA) - Maptime Bogota";
   link: "https://github.com/MaptimeBogota/ColombianJosmValidator";
@@ -146,7 +146,7 @@ meta
 
 /* Las direcciones en Colombia, en el nombre de vía solo deben indicar el tipo y número. */
 *["addr:street"]["addr:street" !~ /^(Calle|Avenida Calle|Carrera|Avenida Carrera|Transversal|Avenida Transversal|Diagonal|Avenida Diagonal) [1-9][0-9]{0,2}[A-Z]{0,1}( Bis( [A-Z]){0,1}){0,1}( Este| Sur| Oeste| Norte){0,1}$/][inside("CO")] {
-    throwWarning: "En las direcciones, los nombres de vías no deben contener abreviaturas, y deben seguir la estructura de nombre";
+    throwWarning: "En las direcciones, los nombres de vías no deben contener abreviaturas, ni deben tener el número del complemento, ni espacios extras";
 
    group: "Colombia - Direcciones";
 
@@ -171,7 +171,7 @@ meta
 /***** TELÉFONO *****/
 
 /* Los número de teléfono de Colombia deben seguir el estándar internacional, no considerarse como llamadas locales.
-Los números de los operadores son:
+Los números que pueden asignar los operadores son:
 Claro: 310, 311, 312, 313, 314, 320, 321, 322, 323
 Movistar: 315, 316, 317, 318
 ETB: 305
@@ -179,8 +179,9 @@ VirginMobile: 319
 Avantel: 350, 351
 Tigo: 300, 301, 302
 Tomado de: https://ayuda.tigo.com.co/hc/es/articles/115012920068-Indicativos-telef%C3%B3nicos-Colombia-General
+Sin embargo, los números pueden cambiar de operador por portabilidad numérica.
 */
-*[/^(phone|phone:mobile|fax|contact:phone|contact:mobile|contact:fax|emergency:phone)$/][/^(phone|phone:mobile|fax|contact:phone|contact:mobile|contact:fax|emergency:phone)$/ !~ /^\+57 (601|602|604|605|606|607|608|300|301|302|305|310|311|312|313|314|315|316|317|318|319|320|321|322|323|350|351) [0-9]{7}$/][inside("CO")] {
+*[/^(phone|phone:mobile|fax|contact:phone|contact:mobile|contact:fax|emergency:phone)$/][/^(phone|phone:mobile|fax|contact:phone|contact:mobile|contact:fax|emergency:phone)$/ !~ /^\+57 (601|602|604|605|606|607|608|300|301|302|305|310|311|312|313|314|315|316|317|318|319|320|321|322|323|350|351) [0-9]{7}(;\+57 (601|602|604|605|606|607|608|300|301|302|305|310|311|312|313|314|315|316|317|318|319|320|321|322|323|350|351) [0-9]{7})*$/][inside("CO")] {
     throwWarning: "Los números de Colombia comienzan con +57, después 3 dígitos de código de área, y finalmente el número como tal";
 
    group: "Colombia - Teléfonos";
