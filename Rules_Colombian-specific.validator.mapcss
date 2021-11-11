@@ -9,7 +9,7 @@ meta
 }
 
 
-/***** RIOS Y QUEBRADAS *****/
+/***** CUERPOS DE AGUA *****/
 
 /* Nombres de ríos. Deben comenzar con la palabra Río, Quebrada u otro nombre de la expresión regular. */
 *["waterway"="river"]["name"]["name" !~ /^(Río|Quebrada|Arroyo|Caño|Chorro|Cañada|Canal|Estero|Nacimiento|Zanjón) /][inside("CO")] {
@@ -167,8 +167,22 @@ meta
    assertNoMatch: "way addr:housenumber=61-31";
 }
 
+*["addr:postcode"]["addr:postcode" !~ /^[0-9]{6}$/][inside("CO")] {
+    throwWarning: "Los códigos postales deben ser de 6 dígitos. Para consultarlo ver el visor de códigos postales de 7-24";
 
-/***** TELÉFONO *****/
+   group: "Colombia - Direcciones";
+
+   fixRemove: "addr:postcode";
+
+   /* Assertions for unit tests */
+   assertMatch: "way addr:postcode=57";
+   assertMatch: "way addr:postcode=11001";
+   assertMatch: "way addr:postcode=111111321";
+   assertNoMatch: "way addr:postcode=111111";
+}
+
+
+/***** TELÉFONOS *****/
 
 /* Los número de teléfono de Colombia deben seguir el estándar internacional, no considerarse como llamadas locales.
 Los números que pueden asignar los operadores son:
@@ -194,3 +208,72 @@ Sin embargo, los números pueden cambiar de operador por portabilidad numérica.
    assertMatch: "node phone=00573166214032";
 }
 
+
+/***** LÍMITES *****/
+
+/* Los códigos postales en Colombia a nivel de área tiene 6 dígitos.
+A nivel de ciudad o municipio tienen 5 dígitos, y a nivel de manzana (código postal ampliado) tienen 9 dígitos, pero estas clasificaciones no se deben mapear. */
+
+way["boundary"="postal_code"]["name"]["name" !~ /^[0-9]{6}-[0-9]{6}$/][inside("CO")] {
+    throwWarning: "Los límites entre 2 códigos postales deben contener los códigos postales de cada área, separados por guión";
+
+    group: "Colombia - Límites";
+
+    /* Assertions for unit tests */
+    assertNoMatch: "way boundary=postal_code name=111111-111321";
+    assertMatch: "way boundary=postal_code name=57";
+    assertMatch: "way boundary=postal_code name=11001";
+    assertMatch: "way boundary=postal_code name=11001-111112";
+    assertMatch: "way boundary=postal_code name=11111112";
+}
+
+way["boundary"="postal_code"]["postal_code"][inside("CO")] {
+    throwWarning: "Los límites de código postal no deben tener la etiqueta postal_code (es solo para la relación)";
+
+    group: "Colombia - Límites";
+
+    fixRemove: "postal_code";
+
+    /* Assertions for unit tests */
+    assertNoMatch: "way boundary=postal_code name=111111-111321";
+    assertMatch: "way boundary=postal_code postal_code=57";
+    assertMatch: "way boundary=postal_code postal_code=11001";
+    assertMatch: "way boundary=postal_code postal_code=111321-111113";
+    assertMatch: "way boundary=postal_code postal_code=11111113";
+}
+
+relation["postal_code"]["postal_code" !~ /^[0-9]{6}$/][inside("CO")] {
+    throwWarning: "Los códigos postales en Colombia tienen 6 dígitos (etiqueta postal_code)";
+
+    group: "Colombia - Límites";
+
+    /* Assertions for unit tests */
+    assertNoMatch: "relation postal_code=111114";
+    assertMatch: "relation postal_code=57";
+    assertMatch: "relation postal_code=11001";
+    assertMatch: "relation postal_code=11111114";
+}
+
+relation["boundary"="postal_code"]["name"]["name" !~ /^[0-9]{6}$/][inside("CO")] {
+    throwWarning: "Los códigos postales en Colombia tienen 6 dígitos (etiqueta name)";
+
+    group: "Colombia - Límites";
+
+    /* Assertions for unit tests */
+    assertNoMatch: "relation boundary=postal_code name=111115";
+    assertMatch: "relation boundary=postal_code name=57";
+    assertMatch: "relation boundary=postal_code name=11001";
+    assertMatch: "relation boundary=postal_code name=11111115";
+}
+
+node["postal_code"][inside("CO")] {
+    throwWarning: "Un nodo no debe tener un código postal. Esto es para una relación o usar addr:postcode";
+
+    group: "Colombia - Límites";
+
+    /* Assertions for unit tests */
+    assertNoMatch: "node name=111116";
+    assertMatch: "node postal_code=57";
+    assertMatch: "node postal_code=11001";
+    assertMatch: "node postal_code=11111116";
+}
