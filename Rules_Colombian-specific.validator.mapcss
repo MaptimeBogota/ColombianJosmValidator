@@ -2,7 +2,7 @@ meta
 {
   title: "Colombia specific rules";
   icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACrklEQVR42u3ZMUoDQRiG4T9mIOtKSq29gUUu4E20srS2FTyI3sMiV/AGaQTRIgF14+KusRVZHOvZ5ymHVB/My5CNAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAQkx+H3QPR2cRcWwaKM4qnTzf/TxIAz86j4hTW0FxlhGRDQAwEgIAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgACAAJgABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEAAQAEABAAQACAUQagaVPUs84yUJimTfkAbLZV1LM3a0FhNtsqH4DFzUW8vB5YCwpzOH+PiKvMC6CpLAUlvgCaf7wAPvuppaBAQ3fbVwAYMQEAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEAPg7AGnXRzeZWgZKu+y7PrpcAOZ9G+tUWwsKM+/bWOcCcP10H9VXZy0ozMdeistcABbNY+zvBABKs52k/H8ALj+Uaehu+woAIyYAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgACMDA2W1ELE0DxVmZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAYn0D8fk8qwS1ctwAAAAASUVORK5CYII=";
-  version: "2021-10-30";
+  version: "2021-11-29";
   description: "Validation rules for the most common issues found in Colombia. Messages are in Spanish, with suggestion and fixes. This is based on the Colombian Guide for Mapping which can be found in the OSM Wiki.";
   author: "Andres Gomez (AngocA) - Maptime Bogota";
   link: "https://github.com/MaptimeBogota/ColombianJosmValidator";
@@ -265,10 +265,10 @@ relation["postal_code"]["admin_level"]["postal_code" !~ /^[0-9]{5}$/][inside("CO
     group: "Colombia - Límites";
 
     /* Assertions for unit tests */
-    assertNoMatch: "relation postal_code=11001";
-    assertMatch: "relation postal_code=57";
-    assertMatch: "relation postal_code=111321";
-    assertMatch: "relation postal_code=11111114";
+    assertNoMatch: "relation admin_level=7 postal_code=11001";
+    assertMatch: "relation admin_level=7 postal_code=57";
+    assertMatch: "relation admin_level=7 postal_code=111321";
+    assertMatch: "relation admin_level=7 postal_code=11111114";
 }
 
 /* Las relaciones que definen las áreas de los códigos postales deben tener 6 dígitos, y el campo name comienza con "Código postal ". */
