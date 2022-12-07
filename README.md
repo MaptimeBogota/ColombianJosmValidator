@@ -16,3 +16,7 @@ Este validador fue hecho basado en la [documentación de JOSM](https://josm.open
 
 Muchas de las reglas están descritas con expresiones regulares, que permiten describir cadenas de caracteres.
 Si quieres aprender de ellas, hay muchos recursos en Internet como https://regexone.com/
+
+Si consideras que el validador debe tener más reglas, puedes crear un issue describiendo al escenario, y posibles casos de uso.
+También puedes crear un fork de este proyecto, adicionar las reglas, y crear un pull request.
+Si tienes dudas, no dudes en contactarnos por redes sociales @MaptimeBogota.
