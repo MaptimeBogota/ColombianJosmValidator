@@ -98,9 +98,9 @@ meta
    assertNoMatch: "way highway=pedestrian";
 }
 
-/* Las vías desconocidas no se deben mapear como unclassified. */
+/* Las vías desconocidas no se deben mapear como unclassified, sino como road. */
 *["highway"="unclassified"][inside("CO")] {
-    throwWarning: "Mapear una vía desconocida como unclassified es incorrecto. Una vía de tipo 'unclassified' es una vía pequeña para automóviles";
+    throwWarning: "Mapear una vía de tipo desconocido como unclassified es incorrecto. Una vía de tipo 'unclassified' es una vía pequeña para automóviles";
 
    fixAdd: "highway=road";
 
