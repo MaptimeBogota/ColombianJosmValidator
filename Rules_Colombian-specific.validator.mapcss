@@ -12,7 +12,7 @@ meta
 /***** CUERPOS DE AGUA *****/
 
 /* Nombres de ríos. Deben comenzar con la palabra Río, Quebrada u otro nombre de la expresión regular. */
-*["waterway"="river"]["name"]["name" !~ /^(Río|Quebrada|Arroyo|Caño|Chorro|Cañada|Canal|Estero|Nacimiento|Zanjón) /][inside("CO")] {
+*["waterway"="river"]["name"]["name" !~ /^(Río|Quebrada|Arroyo|Brazo|Cañada|Caño|Chorro|Canal|Estero|Nacimiento|Zanja|Zanjón) /][inside("CO")] {
     throwWarning: "En los cuerpos de agua de tipo \"river\" o \"stream\", la etiqueta name debe comenzar con: Río, Quebrada, Arroyo, Caño, Chorro, Cañada, Canal, Estero, Nacimiento, Zanjón seguido del nombre como tal";
 
    fixAdd: "name=Río {1.value}";
@@ -30,7 +30,7 @@ meta
 }
 
 /* Nombres de quebradas. Deben comenzar con la palabra Quebrada, Río u otro nombre de la expresión regular. */
-*["waterway"="stream"]["name"]["name" !~ /^(Río|Quebrada|Arroyo|Caño|Chorro|Cañada|Canal|Estero|Nacimiento|Zanjón) /][inside("CO")] {
+*["waterway"="stream"]["name"]["name" !~ /^(Río|Quebrada|Acequía|Arroyo|Brazo|Cañada|Caño|Chorro|Canal|Estero|Nacimiento|Zanja|Zanjón) /][inside("CO")] {
     throwWarning: "En los cuerpos de agua de tipo \"stream\" o \"river\", la etiqueta name debe comenzar con: Río, Quebrada, Arroyo, Caño, Chorro, Cañada, Canal, Estero, Nacimiento, Zanjón seguido del nombre como tal";
 
    fixAdd: "name=Quebrada {1.value}";
