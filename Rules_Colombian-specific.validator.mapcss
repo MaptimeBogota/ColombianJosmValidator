@@ -195,7 +195,7 @@ Tigo: 300, 301, 302, 324
 Tomado de: https://ayuda.tigo.com.co/hc/es/articles/115012920068-Indicativos-telef%C3%B3nicos-Colombia-General
 Sin embargo, los números pueden cambiar de operador por portabilidad numérica.
 */
-*[/^(phone|phone:mobile|fax|contact:phone|contact:mobile|contact:fax|emergency:phone)$/][/^(phone|phone:mobile|fax|contact:phone|contact:mobile|contact:fax|emergency:phone)$/ !~ /^\+57 (601|602|604|605|606|607|608|300|301|302|305|310|311|312|313|314|315|316|317|318|319|320|321|322|323|324|350|351) [0-9]{7}(;\+57 (601|602|604|605|606|607|608|300|301|302|305|310|311|312|313|314|315|316|317|318|319|320|321|322|323|350|351) [0-9]{7})*$/][inside("CO")] {
+*[/^(phone|phone:mobile|fax|contact:phone|contact:mobile|contact:fax|emergency:phone)$/][/^(phone|phone:mobile|fax|contact:phone|contact:mobile|contact:fax|emergency:phone)$/ !~ /^\+57 (601|602|604|605|606|607|608|300|301|302|304|305|310|311|312|313|314|315|316|317|318|319|320|321|322|323|324|350|351) [0-9]{7}(;\+57 (601|602|604|605|606|607|608|300|301|302|304|305|310|311|312|313|314|315|316|317|318|319|320|321|322|323|350|351) [0-9]{7})*$/][inside("CO")] {
     throwWarning: "Los números de Colombia comienzan con +57, después 3 dígitos de código de área, y finalmente el número como tal";
 
    group: "Colombia - Teléfonos";
