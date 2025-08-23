@@ -164,7 +164,7 @@ meta
    /* Assertions for unit tests */
    assertMatch: "way addr:housenumber=56";
    assertMatch: "way addr:housenumber=\"61 - 31\"";
-   assertNoMatch: "way addr:housenumber=61-31";
+   assertMatch: "way addr:housenumber=61-31";
 }
 
 *["addr:postcode"]["addr:postcode" !~ /^[0-9]{6}$/][inside("CO")] {
